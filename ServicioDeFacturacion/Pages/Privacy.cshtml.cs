@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ServicioDeFacturacion.Pages
 {
@@ -14,7 +13,7 @@ namespace ServicioDeFacturacion.Pages
 
         public void OnGet()
         {
+            _logger.LogInformation("Se accedió a la página de política de privacidad.");
         }
     }
-
 }

@@ -1,10 +1,7 @@
 ﻿@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 
-@* Este archivo es el layout compartido de la aplicación.
-   Define la estructura común de todas las páginas: cabecera, navegación, contenido central y pie de página.
-   Gracias a esto, cada página Razor puede reutilizar el mismo diseño sin duplicar código HTML. *@
-
+@* Este es el layout principal de la aplicación. Se reutiliza en todas las páginas para mantener una navegación uniforme y una estructura visual coherente. *@
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,48 +14,44 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-4">
             <div class="container">
-                @* `asp-page` genera la ruta sin que tengamos que escribirla a mano. *@
-                <a class="navbar-brand" asp-area="" asp-page="/Index">@Configuration["AppName"]</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-page="/Index">@Configuration["AppName"]</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Inicio</a>
+                            <a class="nav-link" asp-area="" asp-page="/Index">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacidad</a>
+                            <a class="nav-link" asp-area="" asp-page="/CrearFactura">Crear factura</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Error">Error</a>
+                            <a class="nav-link" asp-area="" asp-page="/Privacy">Privacidad</a>
                         </li>
+                       @*  <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Error">Error</a>
+                        </li> *@
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
 
-    @* Este aviso de ejemplo muestra que el layout puede leer valores de configuración y mostrarlos al usuario. *@
-    <div class="container mb-3">
-        <div class="alert alert-info mb-0" role="alert">
-            <strong>Demo educativa:</strong> @Configuration["Demo:Modo"] · @Configuration["Demo:Tema"] · versión @Configuration["Demo:Version"]
-        </div>
-    </div>
-
     <div class="container">
         <main role="main" class="pb-3">
-            @* `RenderBody()` inserta aquí el contenido específico de cada página .cshtml. *@
+            @* RenderBody inserta el contenido específico de cada página en este punto del layout. *@
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top mt-4 py-3 text-muted">
         <div class="container">
-            &copy; 2026 - @Configuration["AppName"] - <a asp-area="" asp-page="/Privacy">Privacidad</a>
+            &copy; 2026 - @Configuration["AppName"]
         </div>
     </footer>
 
@@ -66,7 +59,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @* `RenderSectionAsync` permite que una vista específica añada scripts adicionales si los necesita. *@
+    @* RenderSectionAsync permite agregar scripts adicionales si una página lo necesita. *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,72 @@
+@page
+@model CrearFacturaModel
+@{
+    // Este título se usa en el layout para mostrar el nombre de la página en la pestaña del navegador.
+    ViewData["Title"] = "Crear factura";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h1 class="h3 mb-3">Crear nueva factura</h1>
+                    <p class="text-muted mb-4">
+                        Este formulario representa el punto de entrada inicial para registrar una factura en la aplicación.
+                    </p>
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label asp-for="DescripcionFactura" class="form-label">Nombre o descripción de la factura</label>
+                            <input asp-for="DescripcionFactura" class="form-control" placeholder="Ej. Factura mensual de servicios" />
+                            <span asp-validation-for="DescripcionFactura" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FechaFactura" class="form-label">Fecha de la factura</label>
+                            <input asp-for="FechaFactura" type="date" class="form-control" />
+                            <span asp-validation-for="FechaFactura" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">¿Requiere seguimiento?</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="RequiereSeguimiento" value="true" />
+                                <label class="form-check-label" asp-for="RequiereSeguimiento">Sí</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="RequiereSeguimiento" value="false" />
+                                <label class="form-check-label" asp-for="RequiereSeguimiento">No</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label d-block">¿La factura está pagada?</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="EstaPagada" value="true" />
+                                <label class="form-check-label" asp-for="EstaPagada">Sí</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" asp-for="EstaPagada" value="false" />
+                                <label class="form-check-label" asp-for="EstaPagada">No</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Guardar factura</button>
+                    </form>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.MensajeExito))
+                    {
+                        <div class="alert alert-success mt-4 mb-0" role="alert">
+                            @Model.MensajeExito
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
