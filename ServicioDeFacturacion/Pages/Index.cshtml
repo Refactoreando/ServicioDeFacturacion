@@ -1,9 +1,18 @@
 ﻿@page
+@* `@page` indica que este archivo es una página Razor Pages y que se puede acceder directamente por su URL.
+   En este caso, la página corresponde a la ruta /Index. *@
+
 @model IndexModel
+@* `@model` conecta esta vista con su clase PageModel asociada, que se encuentra en Index.cshtml.cs.
+   Gracias a esto, la vista puede acceder a propiedades y métodos del modelo. *@
+
 @{
+    // `ViewData` se usa para enviar datos simples de la página a la vista o al layout.
+    // Aquí el título de la pestaña/browser se define para esta página.
     ViewData["Title"] = "Home page";
 }
 
+@* Esta es la parte HTML que se renderiza en el navegador cuando se visita la página. *@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
