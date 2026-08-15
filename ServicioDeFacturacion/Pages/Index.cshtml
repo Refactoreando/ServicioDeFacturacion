@@ -14,6 +14,20 @@
 
 @* Esta es la parte HTML que se renderiza en el navegador cuando se visita la página. *@
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Bienvenido</h1>
+    <div class="mb-3">@Model.Mensaje</div>
+
+    @* Un formulario simple sirve para demostrar la diferencia entre GET y POST en Razor Pages. *@
+    <form method="post">
+        <div class="mb-3">
+            <label asp-for="NombreCliente" class="form-label">Nombre del cliente</label>
+            <input id="NombreCliente" asp-for="NombreCliente" class="form-control" placeholder="Escribe tu nombre" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="button" id="demoButton" class="btn btn-outline-secondary ms-2">Demo JavaScript</button>
+    </form>
+
+    @* Este bloque está pensado para demostrar un cambio simple del DOM sin recargar la página. *@
+    <div id="demoOutput" class="mt-3 text-muted">Aquí aparecerá la respuesta del demo JavaScript.</div>
 </div>

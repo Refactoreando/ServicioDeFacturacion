@@ -8,6 +8,12 @@ namespace ServicioDeFacturacion.Pages
     // preparar datos, manejar peticiones HTTP, validar entradas y decidir qué mostrar.
     public class IndexModel : PageModel
     {
+        public string Mensaje { get; set; } = string.Empty;
+
+        // Se usa para recoger el valor del formulario.
+        [BindProperty]
+        public string NombreCliente { get; set; } = string.Empty;
+
         // El logger se inyecta automáticamente por Dependency Injection.
         // Esto permite registrar información sin crear manualmente la dependencia.
         private readonly ILogger<IndexModel> _logger;
@@ -21,7 +27,15 @@ namespace ServicioDeFacturacion.Pages
         // Aquí es el lugar ideal para cargar datos o preparar valores antes del renderizado.
         public void OnGet()
         {
-            // En esta plantilla inicial no hay lógica adicional, pero este método es el punto de entrada principal.
+            Mensaje = "Bienvenido a la página de inicio de ServicioDeFacturacion.";
+        }
+
+        // `OnPost` se ejecuta cuando el usuario envía el formulario con método POST.
+        public void OnPost()
+        {
+            // Aquí se puede validar, procesar o guardar datos.
+            // En este ejemplo, simplemente cambiamos el mensaje para demostrar que la petición POST se está ejecutando.
+            Mensaje = $"Gracias {NombreCliente}, el formulario fue enviado correctamente.";
         }
     }
 }
