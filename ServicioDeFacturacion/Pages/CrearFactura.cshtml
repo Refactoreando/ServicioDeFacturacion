@@ -17,6 +17,12 @@
 
                     <form method="post">
                         <div class="mb-3">
+                            <label asp-for="NumeroFactura" class="form-label">Número de factura</label>
+                            <input asp-for="NumeroFactura" class="form-control" placeholder="Ej. FAC-20260815-001" />
+                            <span asp-validation-for="NumeroFactura" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
                             <label asp-for="DescripcionFactura" class="form-label">Nombre o descripción de la factura</label>
                             <input asp-for="DescripcionFactura" class="form-control" placeholder="Ej. Factura mensual de servicios" />
                             <span asp-validation-for="DescripcionFactura" class="text-danger"></span>

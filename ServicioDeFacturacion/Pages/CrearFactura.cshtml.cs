@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ServicioDeFacturacion.Data;
 
 namespace ServicioDeFacturacion.Pages
 {
@@ -7,7 +8,13 @@ namespace ServicioDeFacturacion.Pages
     // La vista se encarga de la parte visual, y esta clase captura los datos enviados desde el formulario.
     public class CrearFacturaModel : PageModel
     {
+        // Este campo guarda la referencia al DbContext que ASP.NET Core inyecta automáticamente.
+        private readonly ServicioDeFacturacionDbContext _context;
+
         // BindProperty permite que los valores enviados desde el frontend se conecten automáticamente a estas propiedades.
+        [BindProperty]
+        public string NumeroFactura { get; set; } = string.Empty;
+
         [BindProperty]
         public string? DescripcionFactura { get; set; }
 
@@ -25,8 +32,10 @@ namespace ServicioDeFacturacion.Pages
 
         private readonly ILogger<CrearFacturaModel> _logger;
 
-        public CrearFacturaModel(ILogger<CrearFacturaModel> logger)
+        // ASP.NET Core resuelve este constructor y pasa automáticamente el DbContext y el logger.
+        public CrearFacturaModel(ServicioDeFacturacionDbContext context, ILogger<CrearFacturaModel> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
@@ -36,37 +45,58 @@ namespace ServicioDeFacturacion.Pages
             FechaFactura = DateTime.Today;
             RequiereSeguimiento = false;
             EstaPagada = false;
+            NumeroFactura = $"FAC-{DateTime.Today:yyyyMMdd}-{DateTime.Now:HHmmss}";
             MensajeExito = string.Empty;
         }
 
         // OnPost se ejecuta cuando el usuario envía el formulario mediante el método POST.
-        // Aquí se demuestra el flujo básico de Razor Pages: formulario -> POST -> model binding -> PageModel.
+        // Aquí se demuestra el flujo básico de Razor Pages: formulario -> POST -> model binding -> PageModel -> DbContext -> SQL Server.
         public IActionResult OnPost()
         {
+            if (string.IsNullOrWhiteSpace(NumeroFactura))
+            {
+                ModelState.AddModelError(nameof(NumeroFactura), "Debe ingresar un número de factura.");
+                return Page();
+            }
+
             if (string.IsNullOrWhiteSpace(DescripcionFactura))
             {
                 ModelState.AddModelError(nameof(DescripcionFactura), "Debe ingresar una descripción para la factura.");
                 return Page();
             }
 
-            if(FechaFactura > DateTime.Today)
+            if (FechaFactura > DateTime.Today)
             {
                 ModelState.AddModelError(nameof(FechaFactura), "La fecha de la factura no puede ser futura.");
                 return Page();
             }
 
-            //API
-            //HTTP POST Amazon API (factura)
+            // Se crea la entidad de dominio con los datos recibidos desde el formulario.
+            var factura = new Factura
+            {
+                NumeroFactura = NumeroFactura,
+                DescripcionFactura = DescripcionFactura,
+                FechaFactura = FechaFactura,
+                RequiereSeguimiento = RequiereSeguimiento,
+                EstaPagado = EstaPagada,
+                CreatedBy = "Sistema",
+                CreatedDate = DateTime.Now,
+                UpdatedBy = null,
+                UpdatedDate = null
+            };
 
-            // En este punto se podría guardar en base de datos o realizar más validaciones.
-            // Por ahora, solo se muestra un mensaje para explicar la idea del proceso.
-            MensajeExito = $"La factura '{DescripcionFactura}' fue recibida correctamente y queda registrada para revisión.";
+            // Se agrega la entidad al DbSet y se guarda en SQL Server LocalDB.
+            _context.Facturas.Add(factura);
+            _context.SaveChanges();
+
+            MensajeExito = $"La factura '{factura.NumeroFactura}' se guardó correctamente con Id {factura.Id}.";
 
             _logger.LogInformation(
-                $"Factura creada con fecha {FechaFactura}, requiere seguimiento: {RequiereSeguimiento}, pagada: {EstaPagada}",
-                FechaFactura,
-                RequiereSeguimiento,
-                EstaPagada);
+                "Factura creada con Id {FacturaId}, numero {NumeroFactura}, requiere seguimiento: {RequiereSeguimiento}, pagada: {EstaPagada}",
+                factura.Id,
+                factura.NumeroFactura,
+                factura.RequiereSeguimiento,
+                factura.EstaPagado);
 
             return Page();
         }
